@@ -1,0 +1,23 @@
+[project]
+name = "docklift"
+version = "0.1.0"
+description = "Deploy web applications to VPS using Docker Compose with automatic SSL"
+readme = "README.md"
+authors = [
+    { name = "Amir Karimi", email = "me@amirkarimi.dev" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fabric>=3.2.2",
+    "pyyaml>=6.0.1",
+    "rich>=13.7.0",
+    "pydantic>=2.5.0",
+    "click>=8.1.7",
+]
+
+[project.scripts]
+docklift = "docklift:main"
+
+[build-system]
+requires = ["uv_build>=0.8.15,<0.9.0"]
+build-backend = "uv_build"

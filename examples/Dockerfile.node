@@ -1,0 +1,19 @@
+# Example Dockerfile for Node.js applications
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy application code
+COPY . .
+
+# Expose port (should match port in docklift.yml)
+EXPOSE 3000
+
+# Start application
+CMD ["npm", "start"]

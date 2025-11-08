@@ -1,0 +1,62 @@
+# DockLift Configuration Example
+# Copy this file to docklift.yml and customize for your application
+
+vps:
+  # VPS IP address or hostname
+  host: 192.168.1.100
+
+  # SSH user (often 'root' or a user with sudo privileges)
+  user: root
+
+  # Path to SSH private key
+  ssh_key_path: ~/.ssh/id_rsa
+
+  # SSH port (default: 22)
+  port: 22
+
+  # Email for Let's Encrypt SSL certificate notifications (optional but recommended)
+  # Leave commented out or remove if you don't want to provide an email
+  # email: admin@example.com
+
+application:
+  # Application name (used for container naming)
+  # Must be unique per VPS, lowercase, no spaces
+  name: myapp
+
+  # Domain name where the application will be accessible
+  # Make sure DNS points to your VPS IP
+  domain: myapp.example.com
+
+  # Path to Dockerfile relative to context
+  dockerfile: ./Dockerfile
+
+  # Build context (directory to upload to VPS)
+  context: .
+
+  # Port your application listens on internally (optional, auto-assigned if not specified)
+  # Will start at 3000 and increment for each new app
+  # port: 3000
+
+  # Environment variables for your application
+  environment:
+    NODE_ENV: production
+    DATABASE_URL: postgres://myapp:password@postgres:5432/myapp
+    REDIS_URL: redis://redis:6379
+
+  # Dependency services (databases, caches, etc.)
+  dependencies:
+    # PostgreSQL database
+    postgres:
+      image: postgres:16-alpine
+      environment:
+        POSTGRES_DB: myapp
+        POSTGRES_USER: myapp
+        POSTGRES_PASSWORD: changeme_secure_password
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+    # Redis cache
+    redis:
+      image: redis:7-alpine
+      volumes:
+        - redis_data:/data
