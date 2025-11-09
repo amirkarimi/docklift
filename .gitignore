@@ -50,6 +50,8 @@ htmlcov/
 # Configuration (user-specific)
 docklift.yml
 *.local.yml
+.env
+.env.*
 
 # Temporary files
 *.tmp

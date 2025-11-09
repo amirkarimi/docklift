@@ -32,6 +32,14 @@ def deploy(conn: VPSConnection, app_config: ApplicationConfig) -> None:
         app_config.port = _auto_assign_port(conn, app_config.name)
         console.print(f"[cyan]Auto-assigned port: {app_config.port}[/cyan]")
 
+    # Show environment info
+    if app_config.env_file:
+        env_path = Path(app_config.env_file).expanduser()
+        if env_path.exists():
+            console.print(f"[cyan]Loading environment from: {app_config.env_file}[/cyan]")
+        else:
+            console.print(f"[yellow]Warning: env_file specified but not found: {app_config.env_file}[/yellow]")
+
     app_dir = f"{DOCKLIFT_DIR}/apps/{app_config.name}"
 
     # Create application directory
@@ -230,7 +238,7 @@ def _generate_app_compose(app_config: ApplicationConfig) -> dict[str, Any]:
         },
         "container_name": f"{app_config.name}-app",
         "restart": "unless-stopped",
-        "environment": app_config.environment,
+        "environment": app_config.get_merged_environment(),
         "networks": [SHARED_NETWORK],
         "expose": [str(app_config.port)],
     }

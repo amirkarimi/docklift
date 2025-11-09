@@ -40,8 +40,11 @@ application:
   # Environment variables for your application
   environment:
     NODE_ENV: production
-    DATABASE_URL: postgres://myapp:password@postgres:5432/myapp
-    REDIS_URL: redis://redis:6379
+    # Add non-sensitive environment variables here
+
+  # Optional: Load additional environment variables from .env file (for secrets)
+  # Variables in the YAML config take precedence over .env file
+  # env_file: .env
 
   # Dependency services (databases, caches, etc.)
   dependencies:

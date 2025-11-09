@@ -1,6 +1,7 @@
 """CLI interface for docklift."""
 
 from pathlib import Path
+from typing import Required
 
 import click
 from rich.console import Console
@@ -251,8 +252,8 @@ def remove(config: Path, remove_volumes: bool) -> None:
 )
 @click.option(
     "--port",
-    prompt="Application port",
-    default=3000,
+    prompt="Application port (optional, press Enter to auto-assign)",
+    default=0,
     type=int,
     help="Port the application listens on",
 )
@@ -267,8 +268,9 @@ def init(
             console.print("[yellow]Aborted[/yellow]")
             return
 
-    # Generate email line if provided
+    # Generate configuration lines
     email_line = f"  email: {email}" if email.strip() else "  # email: admin@example.com  # Optional: for Let's Encrypt notifications"
+    port_line = f"  port: {port}" if port != 0 else "  # port: 3000  # Optional: auto-assigned if not specified"
 
     config_template = f"""vps:
   host: {host}
@@ -282,10 +284,11 @@ application:
   domain: {domain}
   dockerfile: ./Dockerfile
   context: .
-  port: {port}
+{port_line}
   environment:
-    # Add environment variables here
+    # Add non-sensitive environment variables here
     # NODE_ENV: production
+  # env_file: .env  # Optional: load secrets from .env file
   dependencies:
     # Add dependency services here (databases, caches, etc.)
     # Example:
