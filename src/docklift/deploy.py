@@ -95,10 +95,6 @@ def _auto_assign_port(conn: VPSConnection, current_app_name: str) -> int:
 
     # Read each app's docker-compose.yml to find their ports
     for app_name in app_names:
-        # Skip the current app if redeploying
-        if app_name == current_app_name:
-            continue
-
         compose_file = f"{apps_dir}/{app_name}/docker-compose.yml"
         if not conn.file_exists(compose_file):
             continue
@@ -121,6 +117,11 @@ def _auto_assign_port(conn: VPSConnection, current_app_name: str) -> int:
                 for port_spec in expose_list:
                     try:
                         port = int(str(port_spec).split("/")[0])  # Handle "3000/tcp"
+
+                        # Return the same port if it's the current app
+                        if app_name == current_app_name:
+                            return port
+
                         max_port = max(max_port, port)
                     except (ValueError, AttributeError):
                         pass
@@ -250,7 +251,6 @@ def _generate_app_compose(app_config: ApplicationConfig) -> dict[str, Any]:
 
     # Compose file structure
     compose: dict[str, Any] = {
-        "version": "3.8",
         "services": services,
         "networks": {
             SHARED_NETWORK: {"external": True},
@@ -371,7 +371,7 @@ def _test_deployment(conn: VPSConnection, app_config: ApplicationConfig) -> None
         hide=True,
     )
 
-    if "failed" in result.stdout or result.stdout.strip() not in ["200", "301", "302"]:
+    if "failed" in result.stdout or result.stdout.strip() not in ["200", "301", "302", "308"]:
         console.print(
             f"[yellow]⚠ Could not verify HTTP connectivity (got: {result.stdout.strip()})[/yellow]"
         )
@@ -382,5 +382,5 @@ def _test_deployment(conn: VPSConnection, app_config: ApplicationConfig) -> None
         console.print(f"[green]✓ Application responding with HTTP {result.stdout.strip()}[/green]")
 
     console.print(
-        f"[cyan]Note: SSL certificates may take a few minutes to provision on first deployment[/cyan]"
+        "[cyan]Note: SSL certificates may take a few minutes to provision on first deployment[/cyan]"
     )

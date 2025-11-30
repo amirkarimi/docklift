@@ -133,12 +133,12 @@ def _generate_initial_caddyfile(email: str | None = None) -> str:
     Returns:
         Caddyfile content as string
     """
-    email_line = f"    email {email}" if email else "    # email not configured"
+    if not email:
+        email = "# email not configured"
 
     return f"""{{
-    # Global options
-    admin off
-{email_line}
+\t# Global options
+\t{email}
 }}
 
 # Placeholder for application routes
@@ -152,9 +152,7 @@ def _generate_caddy_compose() -> str:
     Returns:
         Docker compose YAML as string
     """
-    return f"""version: '3.8'
-
-services:
+    return f"""services:
   caddy:
     image: caddy:2-alpine
     container_name: docklift-caddy
@@ -227,7 +225,7 @@ def update_caddyfile(conn: VPSConnection, domain: str, app_name: str, port: int)
         # Add new route
         new_route = f"""
 {domain} {{
-    reverse_proxy {app_name}:{port}
+\treverse_proxy {app_name}:{port}
 }}
 """
 

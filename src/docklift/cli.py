@@ -285,11 +285,11 @@ application:
   dockerfile: ./Dockerfile
   context: .
 {port_line}
-  environment:
+  # environment:
     # Add non-sensitive environment variables here
     # NODE_ENV: production
   # env_file: .env  # Optional: load secrets from .env file
-  dependencies:
+  # dependencies:
     # Add dependency services here (databases, caches, etc.)
     # Example:
     # postgres:

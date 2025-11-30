@@ -169,7 +169,6 @@ docklift-network (Docker bridge network)
 ### Caddy Compose File
 
 ```yaml
-version: '3.8'
 services:
   caddy:
     image: caddy:2-alpine
@@ -191,7 +190,6 @@ networks:
 ### Application Compose File
 
 ```yaml
-version: '3.8'
 services:
   # Dependency services (databases, caches, etc.)
   postgres:
@@ -233,28 +231,6 @@ All operations are designed to be idempotent:
 - Container start: Uses `--force-recreate` flag
 - Caddy config: Only adds domain if not present
 
-## Error Handling
-
-- **Configuration Errors**: Pydantic validation with clear messages
-- **Connection Errors**: Fabric exceptions caught in CLI commands
-- **Command Failures**: `warn=True` for non-critical operations
-- **Rich Tracebacks**: Detailed error output with `rich.traceback`
-
-## Security Considerations
-
-### Current Implementation
-- SSH key-based authentication (no passwords)
-- Automatic HTTPS via Let's Encrypt
-- No hardcoded credentials
-- Environment variables for secrets
-
-### Areas for Improvement
-- Secrets management (consider vault integration)
-- SSH key permissions validation
-- Network security groups
-- Container security scanning
-- Rate limiting on Caddy
-
 ## Dependencies
 
 ### Runtime
@@ -267,21 +243,10 @@ All operations are designed to be idempotent:
 ### System Requirements
 - Python 3.12+
 - SSH access to VPS
-- VPS: Linux with systemd (Ubuntu/Debian recommended)
+- VPS: Ubuntu/Debian supported for now
 - VPS: Internet access for Docker installation
 
 ## Testing Considerations
-
-### Manual Testing Checklist
-- [ ] Init creates valid configuration
-- [ ] Bootstrap on fresh VPS
-- [ ] Bootstrap on already-bootstrapped VPS (idempotency)
-- [ ] Deploy first application
-- [ ] Deploy second application to same VPS
-- [ ] Redeploy existing application (idempotency)
-- [ ] Status command shows correct info
-- [ ] Remove application
-- [ ] SSL certificate generation (may take few minutes)
 
 ### Future Automated Testing
 - Unit tests for configuration parsing
@@ -292,19 +257,13 @@ All operations are designed to be idempotent:
 ## Future Enhancements
 
 ### Planned Features
-- [ ] Environment variables from `.env` files
-- [ ] Database migration support
-- [ ] Backup and restore commands
+- [x] Environment variables from `.env` files
 - [ ] Log streaming (`docklift logs`)
 - [ ] Scaling support (multiple container instances)
 - [ ] CI/CD integration examples
 - [ ] Rollback functionality
 - [ ] Health check configuration
-- [ ] Custom domain SSL (not just Let's Encrypt)
-- [ ] Monitoring and alerting integration
 
 ### Performance Optimizations
 - [ ] Incremental context uploads (rsync)
 - [ ] Docker layer caching
-- [ ] Parallel deployments
-- [ ] Build caching strategies

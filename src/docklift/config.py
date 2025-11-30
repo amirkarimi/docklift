@@ -135,6 +135,10 @@ class ApplicationConfig(BaseModel):
         # Override with explicit environment variables from config
         merged_env.update(self.environment)
 
+        # Add port as environment variable
+        if self.port is not None:
+            merged_env.setdefault("PORT", str(self.port))
+
         return merged_env
 
 
