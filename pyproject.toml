@@ -1,6 +1,5 @@
 [project]
 name = "docklift"
-version = "0.1.0"
 description = "Deploy web applications to VPS using Docker Compose with automatic SSL"
 readme = "README.md"
 authors = [
@@ -14,10 +13,37 @@ dependencies = [
     "pydantic>=2.5.0",
     "click>=8.1.7",
 ]
+dynamic = ["version"]
+
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "types-pyyaml>=6.0.12.20250915",
+]
 
 [project.scripts]
 docklift = "docklift:main"
 
 [build-system]
-requires = ["uv_build>=0.8.15,<0.9.0"]
-build-backend = "uv_build"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+strict_optional = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unused_configs = true
+show_error_codes = true
+pretty = true
+exclude = [
+    "tests/",
+    "build/",
+]

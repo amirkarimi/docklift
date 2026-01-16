@@ -1,7 +1,6 @@
 """CLI interface for docklift."""
 
 from pathlib import Path
-from typing import Required
 
 import click
 from rich.console import Console

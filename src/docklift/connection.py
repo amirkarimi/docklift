@@ -1,10 +1,10 @@
 """SSH connection management using Fabric."""
 
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fabric import Connection
-from invoke import Result
+from invoke.runners import Result
 from rich.console import Console
 
 from .config import VPSConfig
@@ -83,7 +83,7 @@ class VPSConnection:
         Returns:
             Command result
         """
-        return self.connection.run(command, hide=hide, warn=warn)
+        return cast(Result, self.connection.run(command, hide=hide, warn=warn))
 
     def sudo(
         self, command: str, hide: bool = False, warn: bool = False
@@ -98,7 +98,7 @@ class VPSConnection:
         Returns:
             Command result
         """
-        return self.connection.sudo(command, hide=hide, warn=warn)
+        return cast(Result, self.connection.sudo(command, hide=hide, warn=warn))
 
     def put(self, local: str | Path, remote: str) -> None:
         """Upload file to VPS.

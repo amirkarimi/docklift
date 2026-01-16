@@ -239,7 +239,7 @@ def update_caddyfile(conn: VPSConnection, domain: str, app_name: str, port: int)
 
         # Reload Caddy
         conn.run(
-            f"docker exec docklift-caddy caddy reload --config /etc/caddy/Caddyfile"
+            "docker exec docklift-caddy caddy reload --config /etc/caddy/Caddyfile"
         )
         console.print("[green]✓ Caddy reloaded[/green]")
 

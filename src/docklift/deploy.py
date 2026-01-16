@@ -52,7 +52,7 @@ def deploy(conn: VPSConnection, app_config: ApplicationConfig) -> None:
     _create_app_compose_file(conn, app_config, app_dir)
 
     # Build and start application
-    _build_and_start_app(conn, app_config, app_dir)
+    _build_and_start_app(conn, app_dir)
 
     # Update Caddy configuration
     update_caddyfile(
@@ -142,13 +142,13 @@ def _create_app_directory(conn: VPSConnection, app_dir: str) -> None:
         conn: VPS connection
         app_dir: Application directory path
     """
-    console.print(f"[cyan]Creating application directory...[/cyan]")
+    console.print("[cyan]Creating application directory...[/cyan]")
 
     if not conn.dir_exists(app_dir):
         conn.run(f"mkdir -p {app_dir}")
         console.print(f"[green]✓ Created {app_dir}[/green]")
     else:
-        console.print(f"[green]✓ Directory exists[/green]")
+        console.print("[green]✓ Directory exists[/green]")
 
 
 def _upload_app_context(
@@ -229,7 +229,7 @@ def _generate_app_compose(app_config: ApplicationConfig) -> dict[str, Any]:
 
     # Add dependency services (databases, caches, etc.)
     for dep_name, dep_config in app_config.dependencies.items():
-        services[dep_name] = _service_config_to_compose(dep_name, dep_config)
+        services[dep_name] = _service_config_to_compose(dep_config)
 
     # Add main application service
     app_service: dict[str, Any] = {
@@ -261,7 +261,7 @@ def _generate_app_compose(app_config: ApplicationConfig) -> dict[str, Any]:
 
 
 def _service_config_to_compose(
-    name: str, config: ServiceConfig
+    config: ServiceConfig
 ) -> dict[str, Any]:
     """Convert ServiceConfig to docker-compose service definition.
 
@@ -302,7 +302,7 @@ def _service_config_to_compose(
 
 
 def _build_and_start_app(
-    conn: VPSConnection, app_config: ApplicationConfig, app_dir: str
+    conn: VPSConnection, app_dir: str
 ) -> None:
     """Build and start application using docker compose.
 
