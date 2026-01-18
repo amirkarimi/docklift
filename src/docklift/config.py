@@ -76,8 +76,8 @@ class ServiceConfig(BaseModel):
     """Docker compose service configuration."""
 
     image: str | None = Field(None, description="Docker image name")
-    environment: dict[str, str] = Field(
-        default_factory=dict, description="Environment variables"
+    environment: dict[str, str] | list[str] | None = Field(
+        None, description="Environment variables"
     )
     volumes: list[str] = Field(default_factory=list, description="Volume mounts")
     ports: list[str] = Field(default_factory=list, description="Port mappings")
